@@ -1,0 +1,9 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+<suite name="UI Pages Tests" verbose="1" >
+    <test name="Тесты на элементы форм">
+        <classes>
+            <class name="org.xpathqs.demo.pages.HomePageTest"/>
+            <class name="org.xpathqs.demo.pages.SignInPageTest"/>
+        </classes>
+    </test>
+</suite>
