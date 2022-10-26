@@ -1,6 +1,22 @@
 package org.xpathqs.demo.util.pom
 
+import io.qameta.allure.Allure
+import org.testng.SkipException
+import org.xpathqs.core.selector.base.BaseSelector
+import org.xpathqs.core.selector.block.findWithAnnotation
+import org.xpathqs.core.selector.extensions.rootParent
+import org.xpathqs.demo.util.*
+import org.xpathqs.demo.util.validation.*
+import org.xpathqs.demo.util.widgets.ValidationInput
+import org.xpathqs.driver.extensions.click
+import org.xpathqs.driver.extensions.screenshot
+import org.xpathqs.driver.log.Log
 import org.xpathqs.driver.model.IBaseModel
+import org.xpathqs.driver.model.modelFromUi
+import org.xpathqs.driver.navigation.annotations.UI
+import org.xpathqs.gwt.WHEN
+import org.xpathqs.web.selenium.executor.SeleniumBaseExecutor
+import kotlin.reflect.KMutableProperty
 
 interface IValidationCheck {
     val model: IBaseModel?
@@ -12,13 +28,13 @@ abstract class ValidationCheck(
     var stateHolder: IPageStateHolder? = null
 ) : IValidationCheck {
 
-   /* lateinit var uiModel: IBaseModel
+    lateinit var uiModel: IBaseModel
     var methodCalled = false
     var applyModels = HashSet<IBaseModel>()
 
     override fun checkValidation(tc: ValidationTc) {
         Allure.getLifecycle().updateTestCase {
-            it.name = "Валидация для поля '${tc.v.prop.name}' с типом '${tc.rule}'"
+            it.name = "Validation of field '${tc.v.prop.name}' with type '${tc.rule}'"
         }
 
         stateHolder!!.save()
@@ -54,34 +70,34 @@ abstract class ValidationCheck(
         val block = model.findSelByProp(vc.v.prop)
         vc.rule as Max
 
-        КОГДА("значения меньшего на единицу от максимально допустимого") {
+        WHEN("значения меньшего на единицу от максимально допустимого") {
             vc.rule.input(vc.v.prop, model, (vc.rule.value - 1).toString())
             (block.rootParent as Page).removeInputFocus()
-        }.ТОГДА("ошибка валидации не должна отображаться") {
+        }.THEN("ошибка валидации не должна отображаться") {
             block должна отсутствоватьОшибкаВалидации
             screenshot(block)
         }
 
-        КОГДА("значение равно допустимого") {
+        WHEN("значение равно допустимого") {
             vc.rule.input(vc.v.prop, model, (vc.rule.value).toString())
             (block.rootParent as Page).removeInputFocus()
-        }.ТОГДА("ошибка валидации не должна отображаться") {
+        }.THEN("ошибка валидации не должна отображаться") {
             block должна отсутствоватьОшибкаВалидации
             screenshot(block)
         }
 
-        КОГДА("значение больше допустимого") {
+        WHEN("значение больше допустимого") {
             vc.rule.invalidate(vc.v.prop, uiModel)
             (block.rootParent as Page).removeInputFocus()
-        }.ТОГДА("ошибка валидации должна отображаться c текстом '${vc.rule.hint}'") {
+        }.THEN("ошибка валидации должна отображаться c текстом '${vc.rule.hint}'") {
             block должна отображатьсяОшибкаВалидацииТекстом(vc.rule.hint)
             screenshot((block as ValidationInput).lblError)
         }
 
-        КОГДА("корректное значение повторно введено") {
+        WHEN("корректное значение повторно введено") {
             vc.rule.revert(vc.v.prop, stateHolder!!.model)
             (block.rootParent as Page).removeInputFocus()
-        }.ТОГДА("ошибка валидации должна исчезнуть") {
+        }.THEN("ошибка валидации должна исчезнуть") {
             block должна отсутствоватьОшибкаВалидации
             screenshot(block)
         }
@@ -91,22 +107,31 @@ abstract class ValidationCheck(
         val block = model.findSelByProp(vc.v.prop)
         val rule = vc.rule as Required<*>
 
-        КОГДА("значения из обязательного удалено") {
+        WHEN("значения из обязательного удалено") {
             vc.rule.invalidate(vc.v.prop, uiModel)
-            (block.rootParent as Page).removeInputFocus()
-        }.ТОГДА("должна быть отображена ошибка валидации c текстом '${vc.rule.hint}'") {
+
+            if(vc.v.parent.config.invalidationAction == InvalidationAction.FOCUS_LOST) {
+                (block.rootParent as Page).removeInputFocus()
+            } else {
+                (block.rootParent as Page).findWithAnnotation(UI.Widgets.Submit::class)?.let {it.click()}
+            }
+        }.THEN("должна быть отображена ошибка валидации c текстом '${vc.rule.hint}'") {
             block должна отображатьсяОшибкаВалидацииТекстом(vc.rule.hint)
             screenshot((block as ValidationInput).lblError)
         }
 
-        КОГДА("корректное значение введено") {
+        WHEN("корректное значение введено") {
             if(!vc.v.parent.isInvalidAtStart) {
                 vc.rule.revert(vc.v.prop, stateHolder!!.model)
             } else {
                 model.fill(vc.v.prop as KMutableProperty<*>)
             }
-            (block.rootParent as Page).removeInputFocus()
-        }.ТОГДА("ошибка валидации должна исчезнуть") {
+            if(vc.v.parent.config.invalidationAction == InvalidationAction.FOCUS_LOST) {
+                (block.rootParent as Page).removeInputFocus()
+            } else {
+                (block.rootParent as Page).findWithAnnotation(UI.Widgets.Submit::class)?.let {it.click()}
+            }
+        }.THEN("ошибка валидации должна исчезнуть") {
             block должна отсутствоватьОшибкаВалидацииТекстом(rule.hint)
             screenshot(block)
         }
@@ -116,54 +141,54 @@ abstract class ValidationCheck(
         val block = model.findSelByProp(v.prop)
 
         if(rule.past) {
-            КОГДА("введена дата в прошлом") {
+            WHEN("введена дата в прошлом") {
                 rule.input(v.prop, model, DateHelper.dayInPast)
                 (block.rootParent as Page).removeInputFocus()
-            }.ТОГДА("Ошибка валидации не должна отображаться") {
+            }.THEN("Ошибка валидации не должна отображаться") {
                 block должна отсутствоватьОшибкаВалидации
                 screenshot(block)
             }
         } else {
-            КОГДА("введена дата в прошлом") {
+            WHEN("введена дата в прошлом") {
                 rule.input(v.prop, model, DateHelper.dayInPast)
                 (block.rootParent as Page).removeInputFocus()
-            }.ТОГДА("Должна отображаться ошибка валидации c текстом '${rule.hint}'") {
+            }.THEN("Должна отображаться ошибка валидации c текстом '${rule.hint}'") {
                 block должна отображатьсяОшибкаВалидацииТекстом(rule.hint)
                 screenshot((block as ValidationInput).lblError)
             }
         }
 
         if(rule.current) {
-            КОГДА("введена текущая дата") {
+            WHEN("введена текущая дата") {
                 rule.input(v.prop, model, DateHelper.currentDay)
                 (block.rootParent as Page).removeInputFocus()
-            }.ТОГДА("Ошибка валидации не должна отображаться") {
+            }.THEN("Ошибка валидации не должна отображаться") {
                 block должна отсутствоватьОшибкаВалидации
                 screenshot(block)
             }
         } else {
-            КОГДА("введена текущая дата") {
+            WHEN("введена текущая дата") {
                 rule.input(v.prop, model, DateHelper.currentDay)
                 (block.rootParent as Page).removeInputFocus()
-            }.ТОГДА("Должна отображаться ошибка валидации c текстом '${rule.hint}'") {
+            }.THEN("Должна отображаться ошибка валидации c текстом '${rule.hint}'") {
                 block должна отображатьсяОшибкаВалидацииТекстом(rule.hint)
                 screenshot((block as ValidationInput).lblError)
             }
         }
 
         if(rule.future) {
-            КОГДА("введена дата в будущем") {
+            WHEN("введена дата в будущем") {
                 rule.input(v.prop, model, DateHelper.dayInFuture)
                 (block.rootParent as Page).removeInputFocus()
-            }.ТОГДА("Ошибка валидации не должна отображаться") {
+            }.THEN("Ошибка валидации не должна отображаться") {
                 block должна отсутствоватьОшибкаВалидации
                 screenshot(block)
             }
         } else {
-            КОГДА("введена дата в будущем") {
+            WHEN("введена дата в будущем") {
                 rule.input(v.prop, model, DateHelper.dayInFuture)
                 (block.rootParent as Page).removeInputFocus()
-            }.ТОГДА("Должна отображаться ошибка валидации c текстом '${rule.hint}'") {
+            }.THEN("Должна отображаться ошибка валидации c текстом '${rule.hint}'") {
                 block должна отображатьсяОшибкаВалидацииТекстом(rule.hint)
                 screenshot((block as ValidationInput).lblError)
             }
@@ -173,19 +198,19 @@ abstract class ValidationCheck(
     private fun testRule(v: Validation<*>, rule: MoreThan<*>, model: IBaseModel) {
         val block = model.findSelByProp(v.prop)
 
-        КОГДА("значение поля равно значению '${rule.dependsProp.name}'") {
+        WHEN("значение поля равно значению '${rule.dependsProp.name}'") {
             val originValue = rule.dependsProp.getter.call(model) as String
             rule.input(v.prop, model, originValue)
             (block.rootParent as Page).removeInputFocus()
-        }.ТОГДА("Должна отображаться ошибка валидации c текстом '${rule.hint}'") {
+        }.THEN("Должна отображаться ошибка валидации c текстом '${rule.hint}'") {
             block должна отображатьсяОшибкаВалидацииТекстом(rule.hint)
             screenshot((block as ValidationInput).lblError)
         }
 
-        КОГДА("значение поля меньше значения '${rule.dependsProp.name}'") {
+        WHEN("значение поля меньше значения '${rule.dependsProp.name}'") {
             rule.invalidate(v.prop, uiModel)
             (block.rootParent as Page).removeInputFocus()
-        }.ТОГДА("Должна отображаться ошибка валидации c текстом '${rule.hint}'") {
+        }.THEN("Должна отображаться ошибка валидации c текстом '${rule.hint}'") {
             block должна отображатьсяОшибкаВалидацииТекстом(rule.hint)
             screenshot((block as ValidationInput).lblError)
         }
@@ -194,19 +219,19 @@ abstract class ValidationCheck(
     private fun testRule(v: Validation<*>, rule: MoreOrEqThan<*>, model: IBaseModel) {
         val block = model.findSelByProp(v.prop)
 
-        КОГДА("значение поля равно значению '${rule.dependsProp.name}'") {
+        WHEN("значение поля равно значению '${rule.dependsProp.name}'") {
             val originValue = rule.dependsProp.getter.call(model) as String
             rule.input(v.prop, model, originValue)
             (block.rootParent as Page).removeInputFocus()
-        }.ТОГДА("Ошибка валидации не должна отображаться") {
+        }.THEN("Ошибка валидации не должна отображаться") {
             block должна отсутствоватьОшибкаВалидации
             screenshot(block)
         }
 
-        КОГДА("значение поля меньше чем '${rule.dependsProp.name}'") {
+        WHEN("значение поля меньше чем '${rule.dependsProp.name}'") {
             rule.invalidate(v.prop, uiModel)
             (block.rootParent as Page).removeInputFocus()
-        }.ТОГДА("Должна отображаться ошибка валидации c текстом '${rule.hint}'") {
+        }.THEN("Должна отображаться ошибка валидации c текстом '${rule.hint}'") {
             block должна отображатьсяОшибкаВалидацииТекстом(rule.hint)
             screenshot((block as ValidationInput).lblError)
         }
@@ -215,19 +240,10 @@ abstract class ValidationCheck(
     private fun testRule(v: Validation<*>, rule: DifferanceRange<*>, model: IBaseModel) {
         val block = model.findSelByProp(v.prop)
 
-      *//*  КОГДА("значение поля равно значению '${rule.dependsProp.name}'") {
-            val originValue = rule.dependsProp.getter.call(model) as String
-            rule.input(v.prop, model, originValue)
-            (block.rootParent as Page).removeInputFocus()
-        }.ТОГДА("Ошибка валидации не должна отображаться") {
-            block должна отсутствоватьОшибкаВалидации
-            screenshot(block)
-        }*//*
-
-        КОГДА("значение поля за пределами значения '${rule.dependsProp.name}'") {
+        WHEN("значение поля за пределами значения '${rule.dependsProp.name}'") {
             rule.invalidate(v.prop, uiModel)
             (block.rootParent as Page).removeInputFocus()
-        }.ТОГДА("Должна отображаться ошибка валидации c текстом '${rule.hint}'") {
+        }.THEN("Должна отображаться ошибка валидации c текстом '${rule.hint}'") {
             block должна отображатьсяОшибкаВалидацииТекстом(rule.hint)
             screenshot((block as ValidationInput).lblError)
         }
@@ -254,18 +270,18 @@ abstract class ValidationCheck(
     private fun testRule(v: Validation<*>, rule: Length<*>, model: IBaseModel) {
         val block = model.findSelByProp(v.prop)
 
-        КОГДА("длина значения соответствует заданным ограничениям") {
+        WHEN("длина значения соответствует заданным ограничениям") {
             model.fill(v.prop as KMutableProperty<*>)
             (block.rootParent as Page).removeInputFocus()
-        }.ТОГДА("Ошибка валидации не должна отображаться") {
+        }.THEN("Ошибка валидации не должна отображаться") {
             block должна отсутствоватьОшибкаВалидации
             screenshot(block)
         }
 
-        КОГДА("$rule для поля") {
+        WHEN("$rule для поля") {
             rule.invalidate(v.prop, model)
             (block.rootParent as Page).removeInputFocus()
-        }.ТОГДА("Ошибка валидации должна отображаться") {
+        }.THEN("Ошибка валидации должна отображаться") {
             block должна отображатьсяОшибкаВалидацииТекстом(rule.hint)
             screenshot((block as ValidationInput).lblError)
         }
@@ -281,10 +297,10 @@ abstract class ValidationCheck(
     }
 
     private fun isBlank(vc: ValidationTc) : Boolean {
-        val sel = uiModel.findSelByProp(vc.v.prop) as? ValidationDropdownSelectFirst
+        /*val sel = uiModel.findSelByProp(vc.v.prop) as? ValidationDropdownSelectFirst
         if(sel != null) {
             return sel.isEmpty
-        }
+        }*/
         return uiModel.getValueByProp(vc.v.prop).isBlank()
-    }*/
+    }
 }

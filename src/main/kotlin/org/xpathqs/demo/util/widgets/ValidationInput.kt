@@ -9,6 +9,8 @@ import org.xpathqs.core.selector.extensions.parentCount
 import org.xpathqs.core.selector.extensions.text
 import org.xpathqs.core.util.SelectorFactory.tagSelector
 import org.xpathqs.core.util.SelectorFactory.textSelector
+import org.xpathqs.demo.util.бытьВидима
+import org.xpathqs.demo.util.бытьСкрыта
 import org.xpathqs.driver.extensions.*
 import org.xpathqs.driver.log.Log
 import org.xpathqs.driver.navigation.annotations.UI
@@ -70,7 +72,7 @@ open class ValidationInput(
 
     @UI.Widgets.ValidationError
     @UI.Visibility.Dynamic
-    @Name("ошибкаВалидации")
+    @Name("Validation Error Label")
     val lblError: BaseSelector = HTML.span()
 ) : Input(base, input) {
     constructor(inputName: String, errorLabel: String, baseLevel: Int, secret: Boolean = false) :
@@ -87,7 +89,7 @@ open class ValidationInput(
             lblError = textSelector(errorLabel)
         )
 
-  /*  fun assertNoValidationError() {
+    fun assertNoValidationError() {
         lblError.waitForDisappear(Duration.ofSeconds(1))
         lblError.бытьСкрыта()
     }
@@ -105,7 +107,7 @@ open class ValidationInput(
     fun assertValidationErrorText(text: String) {
         lblError.text(text).waitForVisible(Duration.ofSeconds(1))
         lblError.text(text).бытьВидима()
-    }*/
+    }
 
     override fun isValidationError(): Boolean {
         return lblError.isVisible

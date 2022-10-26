@@ -20,7 +20,7 @@ class SelectorExtractor(
 ) : ISelectorExtractor {
     override val staticSelectors by lazy {
         stateFilter.filter(
-            source.allInnerSelectors.filter {
+            selectors.filter {
                 isStaticSelector(it) && filter(it)
             },
             state
@@ -29,7 +29,7 @@ class SelectorExtractor(
 
     override val dynamicSelectors by lazy {
         stateFilter.filter(
-            source.allInnerSelectors.filter {
+            selectors.filter {
                 !isStaticSelector(it)
                     && !it.hasAnnotation(UI.Widgets.ValidationError::class)
                     && !it.hasAnyParentAnnotation(UI.Widgets.ValidationError::class)
@@ -38,6 +38,19 @@ class SelectorExtractor(
             state
         )
     }
+
+    @OptIn(ExperimentalStdlibApi::class)
+    private val selectors : Collection<BaseSelector>
+        get() {
+            val result = ArrayList<BaseSelector>()
+            source.findAnnotation<UI.Nav.PathTo>()?.let {
+                it.contains.forEach {
+                    result.addAll(it.objectInstance?.allInnerSelectors ?: listOf())
+                }
+            }
+            result.addAll(source.allInnerSelectors)
+            return result
+        }
 
     private fun filter(it: BaseSelector): Boolean {
         return it.field!!.kotlinProperty!!.visibility == KVisibility.PUBLIC

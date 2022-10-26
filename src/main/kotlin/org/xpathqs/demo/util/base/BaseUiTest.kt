@@ -1,6 +1,5 @@
 package org.xpathqs.demo.util.base
 
-import org.xpathqs.demo.util.log.UiLogger
 import io.qameta.allure.Epic
 import org.openqa.selenium.*
 import org.openqa.selenium.chrome.ChromeOptions
@@ -13,15 +12,14 @@ import org.xpathqs.core.selector.base.BaseSelector
 import org.xpathqs.core.selector.selector.Selector
 import org.xpathqs.demo.util.DockerFileManager
 import org.xpathqs.demo.util.UiInitializer.initNavigations
-import org.xpathqs.demo.util.log.AllureLogCallback
-import org.xpathqs.demo.util.log.GWTConfigData
-import org.xpathqs.demo.util.log.ScreenshotConfig
+import org.xpathqs.demo.util.log.*
 import org.xpathqs.demo.util.pom.IXpathQsNavigator
 import org.xpathqs.demo.util.pom.Page
 import org.xpathqs.driver.actions.InputFileAction
 import org.xpathqs.driver.executor.ActionExecMap
 import org.xpathqs.driver.executor.Decorator
 import org.xpathqs.driver.executor.IExecutor
+import org.xpathqs.driver.i18n.I18nHelper
 import org.xpathqs.driver.log.Log
 import org.xpathqs.driver.navigation.NavExecutor
 import org.xpathqs.gwt.GIVEN
@@ -93,6 +91,9 @@ open class BaseUiTest(
             cd.useDocker = true
         }
 
+        System.setProperty("i18n", "ru")
+        I18nHelper
+
         initLog(logger)
 
         initNavigations()
@@ -100,7 +101,7 @@ open class BaseUiTest(
        // loadProperties()
         initDriver()
         SeleniumBaseExecutor.enableScreenshots = false
-        SeleniumBaseExecutor.disableAllScreenshots = false
+        SeleniumBaseExecutor.disableAllScreenshots = true
 
         //commonData.get().driver.manage().window().fullscreen()
 
@@ -297,6 +298,7 @@ open class BaseUiTest(
     protected fun initLog(logger: BaseLogger) {
         Log.log = logger
         GIVEN.log = logger
+        GIVEN.logEvaluator = LogEvaluate()
     }
 
     companion object {

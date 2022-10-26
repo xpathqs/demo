@@ -72,9 +72,7 @@ class AllureLogCallback: ILogCallback {
                 || (msg.isThen && config.afterThen)
                 || (msg.isGiven && config.afterGiven)
             ) {
-                Allure.addAttachment("screenshot", "image/png",
-                    BaseUiTest.takeScreenshot().inputStream(),
-                    "png")
+                attachScreenshot()
             }
             started.remove(msg.bodyMessage.uuid.toString())
             Allure.getLifecycle().stopStep(msg.bodyMessage.uuid.toString())
@@ -100,11 +98,32 @@ class AllureLogCallback: ILogCallback {
                     curUUID,
                     result
                 )
+
+                if(!checkedMessages.contains(curUUID)) {
+                    val config = config.get()
+
+                    if((msg.isWhen && config.beforeWhen)
+                        || (msg.isThen && config.beforeThen)
+                        || (msg.isGiven && config.beforeGiven)
+                    ) {
+                        attachScreenshot()
+                    }
+                    checkedMessages.add(curUUID)
+                }
+
             } else {
                 Allure.step(msg.body)
             }
         }
     }
+
+    private fun attachScreenshot() {
+        Allure.addAttachment("screenshot", "image/png",
+            BaseUiTest.takeScreenshot().inputStream(),
+            "png")
+    }
+
+    private val checkedMessages = HashSet<String>()
 
     override fun onStart(msg: IMessage) {
         curUUID = msg.bodyMessage.uuid.toString()

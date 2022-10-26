@@ -42,7 +42,7 @@ abstract class ValidationRule<T>(var hint: String = "") {
     }
 
     override fun toString(): String {
-        return "Валидация"
+        return "Validation"
     }
 
     fun isDate(prop: KProperty1<*, *>) : Boolean {
@@ -90,7 +90,7 @@ open class Required<T>(
     }
 
     override fun toString(): String {
-        return "Обязательное значение"
+        return "Required value"
     }
 }
 
@@ -296,7 +296,7 @@ class PropertyValidation(
 )
 
 
-class Validations<T: Any>() {
+class Validations<T: Any>(val config: ValidationConfig = ValidationConfig()) {
 
     lateinit var prop: KProperty1<*, *>
 
@@ -424,8 +424,8 @@ class Validation<T: Any>(
 
 }
 
-fun<T: Any> validationFor(lambda: Validations<T>.()->Unit) : Validations<T> {
-    val f = Validations<T>()
+fun<T: Any> validationFor(config: ValidationConfig, lambda: Validations<T>.()->Unit) : Validations<T> {
+    val f = Validations<T>(config)
     f.lambda()
     return f
 }
@@ -488,3 +488,9 @@ val IBaseModel.isApplyModel: Boolean
     get() {
         return (this as? IValidationModel<*>)?.validations?.applyModel == true
     }
+
+enum class InvalidationAction {FOCUS_LOST, SUBMIT}
+
+class ValidationConfig(
+    val invalidationAction: InvalidationAction = InvalidationAction.FOCUS_LOST
+)

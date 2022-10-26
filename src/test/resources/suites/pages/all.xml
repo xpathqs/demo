@@ -1,9 +1,17 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
 <suite name="UI Pages Tests" verbose="1" >
-    <test name="Тесты на элементы форм">
+    <test name="Тесты на элементы">
         <classes>
-            <class name="org.xpathqs.demo.pages.HomePageTest"/>
-            <class name="org.xpathqs.demo.pages.SignInPageTest"/>
+            <!-- Unauthorized tests -->
+            <class name="org.xpathqs.demo.pages.home.HomePageUnauthTest"/>
+            <class name="org.xpathqs.demo.pages.signin.SignInPageTest"/>
+            <class name="org.xpathqs.demo.pages.signup.SignUpPageTest"/>
+
+            <!-- Authorized tests -->
+            <class name="org.xpathqs.demo.pages.home.HomePageAuthTest"/>
+            <class name="org.xpathqs.demo.pages.NewPostPageTest"/>
+            <class name="org.xpathqs.demo.pages.SettingsPageTest"/>
+            <class name="org.xpathqs.demo.pages.ProfilePageTest"/>
         </classes>
     </test>
 </suite>

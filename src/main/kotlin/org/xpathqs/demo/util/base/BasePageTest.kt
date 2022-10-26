@@ -8,8 +8,10 @@ import org.testng.annotations.BeforeMethod
 import org.testng.annotations.DataProvider
 import org.testng.annotations.Test
 import org.xpathqs.core.selector.base.BaseSelector
+import org.xpathqs.demo.util.log.ScreenshotConfig
 import org.xpathqs.demo.util.pom.*
 import org.xpathqs.driver.log.Log
+import org.xpathqs.driver.model.IBaseModel
 import org.xpathqs.driver.navigation.annotations.UI.Visibility.Companion.UNDEF_STATE
 import org.xpathqs.driver.navigation.base.IModelBlock
 import org.xpathqs.log.style.StyleFactory
@@ -26,13 +28,17 @@ open class BasePageTest(
     protected val extractor: ISelectorExtractor = SelectorExtractor(page, state),
 
     protected val validationExtractor: IValidationExtractor = ValidationExtractor(modelBlock),
-   /* protected val validationCheck: IValidationCheck = object: ValidationCheck() {
+    protected val validationCheck: IValidationCheck = object: ValidationCheck() {
         override val model: IBaseModel?
             get() {
                 return modelBlock?.invoke()
             }
-    },*/
+    },
     protected var stateHolder: IPageStateHolder? = null,
+
+    protected val navigationExtractor: INavigationExtractor = NavigationExtractor(page, state),
+    protected val navigationCheck: INavigationCheck = NavigationCheck(),
+
     afterDriverCreated: (BaseUiTest.()->Unit)? = null
 ) : BaseUiTest(
     startUpPage = startUpPage,
@@ -40,13 +46,12 @@ open class BasePageTest(
     afterDriverCreated = afterDriverCreated
 ), ITest {
 
-   /* override fun precondition() {
+    override fun precondition() {
         if(validationCheck.model != null) {
             stateHolder = PageStateHolder(validationCheck.model!!.apply { default() })
             (validationCheck as ValidationCheck).stateHolder = stateHolder
         }
-    }*/
-
+    }
 
     @Story("Elements/Static")
     @Test(dataProvider = "getStatic")
@@ -54,20 +59,24 @@ open class BasePageTest(
         checker.checkSelector(sel)
     }
 
-    @Story("Элементы/Динамические")
+    @Story("Elements/Dynamic")
     @Test(dataProvider = "getDynamic")
     fun testDynamic(sel: BaseSelector) {
         checker.checkSelector(sel)
     }
 
-/*
-
-    @Story("Правила валидации")
+    @Story("Validations")
     @Test(dataProvider = "getValidations")
     fun testValidations(tc: ValidationTc) {
         validationCheck.checkValidation(tc)
     }
-*/
+
+    @Story("Navigations")
+    @Test(dataProvider = "getClickNavigation")
+    @ScreenshotConfig(actionInWhen = true, beforeThen = true)
+    fun testClickNavigations(tc: NavigationTc) {
+        navigationCheck.checkNavigation(tc)
+    }
 
     @DataProvider
     fun getStatic() = extractor.staticSelectors.toTypedArray()
@@ -77,6 +86,9 @@ open class BasePageTest(
 
     @DataProvider
     fun getValidations() = validationExtractor.validations.toTypedArray()
+
+    @DataProvider
+    fun getClickNavigation() = navigationExtractor.getClickNavigations().toTypedArray()
 
     companion object {
         val testCaseName = ThreadLocal<String>()
@@ -89,18 +101,22 @@ open class BasePageTest(
     @BeforeMethod(alwaysRun = true)
     open fun setTestName(method: Method, args: Array<Any?>?) {
         if(args?.isNotEmpty() == true) {
-            val sel = args!![0] as? BaseSelector
-            if(sel != null) {
-                testCaseName.set(sel.name)
-            } else {
-                val tc = args[0] as? ValidationTc
-                if(tc != null) {
-                    val title = "Валидация для поля '${tc.v.prop.name}' с типом '${tc.rule}'"
+            val arg = args!![0]
+            when(arg) {
+                is BaseSelector -> {
+                    testCaseName.set(arg.name)
+                }
+                is ValidationTc -> {
+                    val title = "Validation for field '${arg.v.prop.name}' with type '${arg.rule}'"
                     testCaseName.set(title)
                     Log.tag(
                         StyleFactory.testTitle("                    $title                    "), "title"
                     )
-                } else {
+                }
+                is NavigationTc -> {
+                    testCaseName.set(arg.getName())
+                }
+                else -> {
                     testCaseName.set(method.name)
                 }
             }
@@ -115,7 +131,7 @@ open class BasePageTest(
             page.navigate(state)
         } catch (e: Exception) {
             e.printStackTrace()
-            throw SkipException("Navigation was not complited")
+            throw SkipException("Navigation was not completed")
         }
     }
 }
