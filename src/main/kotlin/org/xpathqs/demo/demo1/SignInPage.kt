@@ -4,22 +4,12 @@ import org.xpathqs.core.selector.extensions.contains
 import org.xpathqs.core.util.SelectorFactory.textSelector
 import org.xpathqs.demo.pages.HomePage
 import org.xpathqs.demo.pages.SignUpPage
-import org.xpathqs.demo.pages.common.GlobalState.STATE_AUTHORIZED
-import org.xpathqs.demo.pages.common.GlobalState.STATE_UNAUTHORIZED
-import org.xpathqs.demo.util.pom.Block
-import org.xpathqs.demo.util.pom.Page
-import org.xpathqs.demo.util.validation.*
-import org.xpathqs.demo.util.widgets.UIKit
-import org.xpathqs.driver.extensions.afterAction
-import org.xpathqs.driver.extensions.waitForVisible
-import org.xpathqs.driver.model.IBaseModel
-import org.xpathqs.driver.model.IBaseModel.Companion.DEFAULT
-import org.xpathqs.driver.model.IBaseModel.Companion.INCORRECT
+
 import org.xpathqs.driver.navigation.annotations.UI
-import org.xpathqs.driver.navigation.base.IModelBlock
-import org.xpathqs.driver.navigation.base.IPageState
+import org.xpathqs.framework.pom.Block
+import org.xpathqs.framework.pom.Page
+
 import org.xpathqs.web.factory.HTML
-import java.time.Duration
 
 @OptIn(ExperimentalStdlibApi::class)
 @UI.Nav.PathTo(contains = [Header::class])
@@ -72,6 +62,9 @@ object HomePage : Page() {
 
 
 fun main() {
+
+    val s = HomePage::class.java.classLoader.getResource("xpathqs.properties")?.readText()
+
     SignInPage.pageTitle
     SignInPage.password
     SignInPage.login

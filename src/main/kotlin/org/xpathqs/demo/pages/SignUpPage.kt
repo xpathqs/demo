@@ -2,12 +2,11 @@ package org.xpathqs.demo.pages
 
 import org.xpathqs.demo.pages.common.GlobalState
 import org.xpathqs.demo.pages.common.Header
-import org.xpathqs.demo.util.pom.Page
-import org.xpathqs.demo.util.setup
-import org.xpathqs.demo.util.validation.*
 import org.xpathqs.driver.model.IBaseModel
 import org.xpathqs.driver.navigation.annotations.UI
 import org.xpathqs.driver.navigation.base.IModelBlock
+import org.xpathqs.framework.pom.Page
+import org.xpathqs.framework.setup
 import org.xpathqs.web.factory.HTML
 
 @OptIn(ExperimentalStdlibApi::class)

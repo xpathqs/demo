@@ -1,10 +1,9 @@
 package org.xpathqs.demo.pages
 
-import org.xpathqs.demo.pages.common.GlobalState
 import org.xpathqs.demo.pages.common.GlobalState.STATE_AUTHORIZED
 import org.xpathqs.demo.pages.common.Header
-import org.xpathqs.demo.util.pom.Page
 import org.xpathqs.driver.navigation.annotations.UI
+import org.xpathqs.framework.pom.Page
 import org.xpathqs.web.factory.HTML
 
 @OptIn(ExperimentalStdlibApi::class)

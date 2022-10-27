@@ -8,17 +8,16 @@ import org.xpathqs.demo.pages.HomePage
 import org.xpathqs.demo.pages.SignInPage
 import org.xpathqs.demo.pages.common.GlobalState.STATE_AUTHORIZED
 import org.xpathqs.demo.pages.common.GlobalState.STATE_UNAUTHORIZED
-import org.xpathqs.demo.pages.common.Header
-import org.xpathqs.demo.util.base.BaseUiTest
-import org.xpathqs.demo.util.getStaticSelectorsWithState
-import org.xpathqs.demo.util.submit
-import org.xpathqs.demo.util.бытьВидимым
-import org.xpathqs.demo.util.должен
+import org.xpathqs.demo.util.UiTest
+import org.xpathqs.framework.base.BaseUiTest
+import org.xpathqs.framework.getStaticSelectorsWithState
+import org.xpathqs.framework.submit
+import org.xpathqs.framework.бытьВидимым
+import org.xpathqs.framework.должен
 import org.xpathqs.gwt.WHEN
 
 @Feature("SignIn")
-class AuthTest : BaseUiTest(
-    startUpPage = HomePage,
+class AuthTest : UiTest(
     afterDriverCreated = { SignInPage.navigate(STATE_UNAUTHORIZED) }
 ) {
     @Story("Functional")

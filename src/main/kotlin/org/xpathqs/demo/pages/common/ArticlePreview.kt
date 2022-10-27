@@ -1,10 +1,13 @@
 package org.xpathqs.demo.pages.common
 
 import org.xpathqs.core.util.SelectorFactory
-import org.xpathqs.demo.util.pom.Block
+import org.xpathqs.demo.pages.SignInPage
+import org.xpathqs.demo.pages.common.GlobalState.STATE_UNAUTHORIZED
 import org.xpathqs.driver.navigation.annotations.UI
+import org.xpathqs.framework.pom.Block
 import org.xpathqs.web.factory.HTML
 
+@OptIn(ExperimentalStdlibApi::class)
 class ArticlePreview : Block(
     HTML.div(cls = "article-preview")
 ) {
@@ -18,6 +21,12 @@ class ArticlePreview : Block(
         ) {
             val author = HTML.a(cls = "author")
             val date = HTML.span(cls = "date")
+           /* @UI.Nav.PathTo(
+                byClick = SignInPage::class,
+                selfPageState = STATE_UNAUTHORIZED,
+                pageState = STATE_UNAUTHORIZED,
+                weight = 1000
+            )*/
             val buttonLike = HTML.button()
         } val meta = Meta()
 

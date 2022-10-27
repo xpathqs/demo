@@ -3,19 +3,19 @@ package org.xpathqs.demo.pages
 import org.xpathqs.core.selector.extensions.contains
 import org.xpathqs.core.selector.extensions.containsAny
 import org.xpathqs.core.selector.extensions.parentCount
-import org.xpathqs.core.util.SelectorFactory.textSelector
+
 import org.xpathqs.demo.pages.common.ArticlePreview
 import org.xpathqs.demo.pages.common.GlobalState.STATE_AUTHORIZED
 import org.xpathqs.demo.pages.common.GlobalState.STATE_UNAUTHORIZED
 import org.xpathqs.demo.pages.common.Header
-import org.xpathqs.demo.util.pom.Block
-import org.xpathqs.demo.util.pom.Page
 import org.xpathqs.driver.extensions.afterAction
 import org.xpathqs.driver.extensions.isVisible
 import org.xpathqs.driver.extensions.waitForVisible
 import org.xpathqs.driver.navigation.annotations.NavOrderType
 import org.xpathqs.driver.navigation.annotations.UI
 import org.xpathqs.driver.navigation.base.IPageState
+import org.xpathqs.framework.pom.Block
+import org.xpathqs.framework.pom.Page
 import org.xpathqs.web.factory.HTML
 import java.time.Duration
 
@@ -46,7 +46,7 @@ object HomePage : Page(), IPageState {
                 HTML.div(cls = "feed-toggle")
             ) {
                 @UI.Visibility.State(STATE_AUTHORIZED)
-               // @UI.Visibility.Backend
+                @UI.Visibility.Dynamic
                 @UI.Nav.PathTo(byClick = YourFeed::class)
                 val yourFeed = HTML.a(text = "Your Feed").afterAction {
                     YourFeed.article.waitForVisible(Duration.ofSeconds(5))

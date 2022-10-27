@@ -4,12 +4,12 @@ import io.qameta.allure.Feature
 import org.xpathqs.demo.pages.HomePage
 import org.xpathqs.demo.pages.SignInPage
 import org.xpathqs.demo.pages.common.GlobalState
-import org.xpathqs.demo.util.base.BasePageTest
+import org.xpathqs.demo.util.PageTest
+import org.xpathqs.framework.base.BasePageTest
 
 @Feature("SignIn")
-class SignInPageTest : BasePageTest(
+class SignInPageTest : PageTest(
     page = SignInPage,
-    startUpPage = HomePage,
     state = GlobalState.STATE_UNAUTHORIZED
 ) {
 }

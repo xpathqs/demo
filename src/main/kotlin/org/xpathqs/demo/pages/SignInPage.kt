@@ -4,15 +4,15 @@ import org.xpathqs.core.util.SelectorFactory.textSelector
 import org.xpathqs.demo.pages.common.GlobalState.STATE_AUTHORIZED
 import org.xpathqs.demo.pages.common.GlobalState.STATE_UNAUTHORIZED
 import org.xpathqs.demo.pages.common.Header
-import org.xpathqs.demo.util.pom.Block
-import org.xpathqs.demo.util.pom.Page
-import org.xpathqs.demo.util.validation.*
-import org.xpathqs.demo.util.widgets.UIKit
 import org.xpathqs.driver.model.IBaseModel
 import org.xpathqs.driver.model.IBaseModel.Companion.DEFAULT
 import org.xpathqs.driver.model.IBaseModel.Companion.INCORRECT
 import org.xpathqs.driver.navigation.annotations.UI
 import org.xpathqs.driver.navigation.base.IModelBlock
+import org.xpathqs.framework.pom.Block
+import org.xpathqs.framework.pom.Page
+import org.xpathqs.framework.validation.*
+import org.xpathqs.framework.widgets.UIKit
 import org.xpathqs.web.factory.HTML
 
 @OptIn(ExperimentalStdlibApi::class)
@@ -75,10 +75,4 @@ object SignInPage : Page(), IModelBlock<SignInPage.SignInModel> {
 
     override fun invoke() = SignInModel()
 
-}
-
-fun main() {
-    println(
-        "Hellow world"
-    )
 }

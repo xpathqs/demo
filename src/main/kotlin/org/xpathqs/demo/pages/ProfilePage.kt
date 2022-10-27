@@ -5,11 +5,11 @@ import org.xpathqs.core.selector.extensions.parentCount
 import org.xpathqs.demo.pages.common.ArticlePreview
 import org.xpathqs.demo.pages.common.GlobalState
 import org.xpathqs.demo.pages.common.Header
-import org.xpathqs.demo.util.pom.Block
-import org.xpathqs.demo.util.pom.Page
 import org.xpathqs.driver.extensions.afterAction
 import org.xpathqs.driver.extensions.waitForVisible
 import org.xpathqs.driver.navigation.annotations.UI
+import org.xpathqs.framework.pom.Block
+import org.xpathqs.framework.pom.Page
 import org.xpathqs.web.factory.HTML
 import java.time.Duration
 
