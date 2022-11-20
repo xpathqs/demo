@@ -38,7 +38,6 @@ object HomePage : Page(), IPageState {
             val subtitle = HTML.p(text = "A place to share your knowledge.")
         }
 
-
         object Feed: Block(
             HTML.div(cls = "col-md-9") contains HTML.div(cls = "feed-toggle")
         ) {

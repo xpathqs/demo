@@ -16,6 +16,9 @@ import org.xpathqs.web.factory.HTML
 object SignInPage : Page() {
     val pageTitle = HTML.h1(text = "Sign in")
 
+    @UI.Nav.PathTo(byClick = SignUpPage::class)
+    val needAccount = HTML.a(text = "Need an account?")
+
     val login = HTML.input(placeHolder = "Email")
     val password = HTML.input(placeHolder = "Password")
 
@@ -35,6 +38,9 @@ object Header : Block() {
 }
 
 object SignUp
+
+@OptIn(ExperimentalStdlibApi::class)
+@UI.Nav.PathTo(contains = [Header::class])
 object HomePage : Page() {
     override val url: String
         get() = "http://localhost:3000/"
@@ -69,6 +75,7 @@ fun main() {
     SignInPage.password
     SignInPage.login
     SignInPage.signIn
+    SignInPage.needAccount
   //  SignInPage.Errors.incorrectCredentials
 
     Header.home

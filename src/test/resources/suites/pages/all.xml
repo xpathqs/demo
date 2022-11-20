@@ -12,6 +12,10 @@
             <class name="org.xpathqs.demo.pages.NewPostPageTest"/>
             <class name="org.xpathqs.demo.pages.SettingsPageTest"/>
             <class name="org.xpathqs.demo.pages.ProfilePageTest"/>
+
+            <!-- Functional tests -->
+            <class name="org.xpathqs.demo.pages.signin.AuthTest"/>
+            <class name="org.xpathqs.demo.pages.signup.SignUpTest"/>
         </classes>
     </test>
 </suite>

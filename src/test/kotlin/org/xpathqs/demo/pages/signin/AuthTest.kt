@@ -9,18 +9,17 @@ import org.xpathqs.demo.pages.SignInPage
 import org.xpathqs.demo.pages.common.GlobalState.STATE_AUTHORIZED
 import org.xpathqs.demo.pages.common.GlobalState.STATE_UNAUTHORIZED
 import org.xpathqs.demo.util.UiTest
-import org.xpathqs.framework.base.BaseUiTest
-import org.xpathqs.framework.getStaticSelectorsWithState
-import org.xpathqs.framework.submit
-import org.xpathqs.framework.бытьВидимым
-import org.xpathqs.framework.должен
+import org.xpathqs.driver.extensions.click
+import org.xpathqs.framework.*
+import org.xpathqs.framework.extensions.*
 import org.xpathqs.gwt.WHEN
+import org.xpathqs.web.extensions.submit
 
 @Feature("SignIn")
+@Story("Functional")
 class AuthTest : UiTest(
     afterDriverCreated = { SignInPage.navigate(STATE_UNAUTHORIZED) }
 ) {
-    @Story("Functional")
     @Test
     fun `Success authentication`() {
         WHEN("User authenticate with correct credentials") {
@@ -31,8 +30,24 @@ class AuthTest : UiTest(
         }.THEN("HomePage And Header should be shown with the elements for the authorized user") {
             val selectors = (HomePage as Block).getStaticSelectorsWithState(STATE_AUTHORIZED)
             selectors.forEach {
-                it должен бытьВидимым
+                it should beVisible
             }
         }
     }
+
+  /*  @Test
+    fun `Incorrect credentials`() {
+        WHEN("User authenticate with incorrect credentials") {
+            SignInPage().fill {
+                login = "test@test.com"
+                password = "1"
+            }
+            SignInPage.signIn.click()
+        }.THEN("HomePage And Header should be shown with the elements for the authorized user") {
+            val selectors = (HomePage as Block).getStaticSelectorsWithState(STATE_AUTHORIZED)
+            selectors.forEach {
+                it should beVisible
+            }
+        }
+    }*/
 }

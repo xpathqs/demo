@@ -5,8 +5,8 @@ import org.xpathqs.demo.pages.common.Header
 import org.xpathqs.driver.model.IBaseModel
 import org.xpathqs.driver.navigation.annotations.UI
 import org.xpathqs.driver.navigation.base.IModelBlock
+import org.xpathqs.framework.extensions.setup
 import org.xpathqs.framework.pom.Page
-import org.xpathqs.framework.setup
 import org.xpathqs.web.factory.HTML
 
 @OptIn(ExperimentalStdlibApi::class)

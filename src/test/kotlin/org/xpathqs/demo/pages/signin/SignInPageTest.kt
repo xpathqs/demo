@@ -11,5 +11,4 @@ import org.xpathqs.framework.base.BasePageTest
 class SignInPageTest : PageTest(
     page = SignInPage,
     state = GlobalState.STATE_UNAUTHORIZED
-) {
-}
+)

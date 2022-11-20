@@ -1,6 +1,5 @@
 import org.gradle.api.tasks.testing.logging.TestLogEvent
 
-
 val kotlinVersion = "1.6.0"
 
 plugins {
@@ -29,16 +28,12 @@ dependencies {
 }
 
 tasks.named<Test>("test") {
-    /*  doFirst {
-          jvmArgs("-javaagent:${agent.singleFile}")
-      }*/
     defaultCharacterEncoding = "UTF-8"
     environment(mapOf("TESTCONTAINERS_RYUK_DISABLED" to "true"))
     defaultCharacterEncoding = "UTF-8"
 
 
     useTestNG(closureOf<TestNGOptions> {
-
        suites("src/test/resources/suites/pages/all.xml")
     })
 
