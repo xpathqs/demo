@@ -22,7 +22,7 @@ dependencies {
     implementation(kotlin("stdlib"))
     implementation ("org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion")
 
-    implementation("org.xpathqs:framework-testng:0.0.1")
+    implementation("org.xpathqs:framework-testng:0.0.2")
     implementation("io.qameta.allure:allure-testng:2.14.0")
 
 }
