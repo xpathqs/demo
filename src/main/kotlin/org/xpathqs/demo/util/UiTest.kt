@@ -7,7 +7,7 @@ import org.xpathqs.framework.pom.Page
 open class UiTest(
     startUpPage: Page? = HomePage,
     redirectPage: Page? = null,
-    afterDriverCreated: (BaseUiTest.()->Unit)? = null,
+    afterDriverCreated: (BaseUiTest.() -> Unit)? = null,
 ) : BaseUiTest(
     startUpPage = startUpPage,
     redirectPage = redirectPage,

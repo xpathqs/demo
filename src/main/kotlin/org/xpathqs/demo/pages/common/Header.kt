@@ -4,15 +4,11 @@ import org.xpathqs.core.selector.extensions.plus
 import org.xpathqs.demo.pages.*
 import org.xpathqs.demo.pages.common.GlobalState.STATE_AUTHORIZED
 import org.xpathqs.demo.pages.common.GlobalState.STATE_UNAUTHORIZED
-import org.xpathqs.driver.extensions.int
 import org.xpathqs.driver.extensions.isVisible
-import org.xpathqs.driver.model.IBaseModel
 import org.xpathqs.driver.navigation.annotations.UI
 import org.xpathqs.driver.navigation.base.IPageInternalState
 import org.xpathqs.driver.navigation.base.IPageState
-import org.xpathqs.framework.base.BaseUiTest
 import org.xpathqs.framework.base.BaseUiTest.Companion.currentPage
-import org.xpathqs.framework.log.CommonData
 import org.xpathqs.framework.pom.Block
 import org.xpathqs.web.factory.HTML
 
@@ -49,15 +45,12 @@ object Header : Block(HTML.header()), IPageState, IPageInternalState {
     }
 
     override val pageState: Int
-        get() = if(Unuathorized.signIn.isVisible) STATE_UNAUTHORIZED else STATE_AUTHORIZED
-//    override val ps = PageState(this)
+        get() = if (Unuathorized.signIn.isVisible) STATE_UNAUTHORIZED else STATE_AUTHORIZED
 
     override var pageInternalState: Int
-        get() {
-            return pageState
-        }
+        get() = pageState
         set(state) {
-            if(state != pageInternalState) {
+            if (state != pageInternalState) {
                 currentPage.navigate(state)
             }
         }

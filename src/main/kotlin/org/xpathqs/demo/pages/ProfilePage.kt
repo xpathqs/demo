@@ -14,10 +14,14 @@ import org.xpathqs.web.factory.HTML
 import java.time.Duration
 
 @OptIn(ExperimentalStdlibApi::class)
-@UI.Nav.PathTo(contains = [Header::class], selfPageState = GlobalState.STATE_AUTHORIZED, pageState = GlobalState.STATE_AUTHORIZED)
+@UI.Nav.PathTo(
+    contains = [Header::class],
+    selfPageState = GlobalState.STATE_AUTHORIZED,
+    pageState = GlobalState.STATE_AUTHORIZED
+)
 @UI.Nav.Config(GlobalState.STATE_AUTHORIZED)
 object ProfilePage : Page(
-   HTML.div(cls = "profile-page")
+    HTML.div(cls = "profile-page")
 ) {
     @UI.Nav.WaitForLoad
     object UserInfo : Block(
@@ -28,7 +32,7 @@ object ProfilePage : Page(
         val editSettings = HTML.a(testId = "edit-settings")
     }
 
-    object Articles: Block(
+    object Articles : Block(
         HTML.div(cls = "container")
     ) {
         object Tabs : Block(
@@ -49,15 +53,21 @@ object ProfilePage : Page(
         @UI.Visibility.Dynamic
         @UI.Visibility.State(GlobalState.STATE_AUTHORIZED)
         object MyArticles : Block(
-            (HTML.div(cls = "articles-toggle") containsAny HTML.a(clsContains = "active", text = "My Articles")).parentCount(1)
+            (HTML.div(cls = "articles-toggle") containsAny HTML.a(
+                clsContains = "active",
+                text = "My Articles"
+            )).parentCount(1)
         ) {
             val article = ArticlePreview()
         }
 
         @UI.Visibility.Dynamic
         object Favorited : Block(
-            (HTML.div(cls = "articles-toggle") containsAny HTML.a(clsContains = "active", text = "Favorited Articles")).parentCount(1)
-        ){
+            (HTML.div(cls = "articles-toggle") containsAny HTML.a(
+                clsContains = "active",
+                text = "Favorited Articles"
+            )).parentCount(1)
+        ) {
             val article = ArticlePreview()
         }
     }

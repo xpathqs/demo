@@ -35,7 +35,7 @@ object SignInPage : Page(), IModelBlock<SignInPage.SignInModel> {
     @UI.Widgets.Submit
     val signIn = HTML.button(text = "Sign in")
 
-    object Errors: Block() {
+    object Errors : Block() {
         @UI.Visibility.Dynamic(modelState = INCORRECT, submitModel = true)
         val incorrectCredentials = textSelector("email or password is invalid")
     }
@@ -72,5 +72,4 @@ object SignInPage : Page(), IModelBlock<SignInPage.SignInModel> {
     }
 
     override fun invoke() = SignInModel()
-
 }

@@ -24,7 +24,6 @@ dependencies {
 
     implementation("org.xpathqs:framework-testng:0.0.2")
     implementation("io.qameta.allure:allure-testng:2.14.0")
-
 }
 
 tasks.named<Test>("test") {

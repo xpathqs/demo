@@ -7,7 +7,11 @@ import org.xpathqs.framework.pom.Page
 import org.xpathqs.web.factory.HTML
 
 @OptIn(ExperimentalStdlibApi::class)
-@UI.Nav.PathTo(contains = [Header::class], selfPageState = GlobalState.STATE_AUTHORIZED, pageState = GlobalState.STATE_AUTHORIZED)
+@UI.Nav.PathTo(
+    contains = [Header::class],
+    selfPageState = GlobalState.STATE_AUTHORIZED,
+    pageState = GlobalState.STATE_AUTHORIZED
+)
 @UI.Nav.Config(GlobalState.STATE_AUTHORIZED)
 object SettingsPage : Page() {
 
@@ -22,6 +26,10 @@ object SettingsPage : Page() {
     @UI.Widgets.Submit
     val update = HTML.button(text = "Update Settings")
 
-    @UI.Nav.PathTo(byClick = HomePage::class, selfPageState = GlobalState.STATE_AUTHORIZED, pageState = GlobalState.STATE_UNAUTHORIZED)
+    @UI.Nav.PathTo(
+        byClick = HomePage::class,
+        selfPageState = GlobalState.STATE_AUTHORIZED,
+        pageState = GlobalState.STATE_UNAUTHORIZED
+    )
     val logout = HTML.button(text = "Or click here to logout.")
 }

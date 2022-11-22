@@ -38,7 +38,7 @@ object HomePage : Page(), IPageState {
             val subtitle = HTML.p(text = "A place to share your knowledge.")
         }
 
-        object Feed: Block(
+        object Feed : Block(
             HTML.div(cls = "col-md-9") contains HTML.div(cls = "feed-toggle")
         ) {
             object Tabs : Block(
@@ -60,15 +60,21 @@ object HomePage : Page(), IPageState {
             @UI.Visibility.Dynamic
             @UI.Visibility.State(STATE_AUTHORIZED)
             object YourFeed : Block(
-                (HTML.div(cls = "feed-toggle") containsAny HTML.a(clsContains = "active", text = "Your Feed")).parentCount(1)
+                (HTML.div(cls = "feed-toggle") containsAny HTML.a(
+                    clsContains = "active",
+                    text = "Your Feed"
+                )).parentCount(1)
             ) {
                 val article = ArticlePreview()
             }
 
             @UI.Visibility.Dynamic
             object Global : Block(
-                (HTML.div(cls = "feed-toggle") containsAny HTML.a(clsContains = "active", text = "Global Feed")).parentCount(1)
-            ){
+                (HTML.div(cls = "feed-toggle") containsAny HTML.a(
+                    clsContains = "active",
+                    text = "Global Feed"
+                )).parentCount(1)
+            ) {
                 val article = ArticlePreview()
             }
         }
@@ -82,5 +88,5 @@ object HomePage : Page(), IPageState {
     }
 
     override val pageState: Int
-        get() = if(Content.Banner.title.isVisible) STATE_UNAUTHORIZED else STATE_AUTHORIZED
+        get() = if (Content.Banner.title.isVisible) STATE_UNAUTHORIZED else STATE_AUTHORIZED
 }

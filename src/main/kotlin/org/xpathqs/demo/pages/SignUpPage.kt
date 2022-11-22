@@ -17,7 +17,11 @@ import org.xpathqs.web.factory.HTML
     pageState = GlobalState.STATE_AUTHORIZED,
     selfPageState = GlobalState.STATE_UNAUTHORIZED
 )
-@UI.Nav.PathTo(contains = [Header::class], selfPageState = GlobalState.STATE_UNAUTHORIZED, pageState = GlobalState.STATE_UNAUTHORIZED)
+@UI.Nav.PathTo(
+    contains = [Header::class],
+    selfPageState = GlobalState.STATE_UNAUTHORIZED,
+    pageState = GlobalState.STATE_UNAUTHORIZED
+)
 @UI.Nav.Config(defaultState = GlobalState.STATE_UNAUTHORIZED)
 object SignUpPage : Page(), IModelBlock<SignUpPage.SignUpModel> {
     @UI.Nav.DeterminateBy
@@ -54,7 +58,7 @@ object SignUpPage : Page(), IModelBlock<SignUpPage.SignUpModel> {
         }
     }
 
-    override fun invoke() :SignUpModel {
+    override fun invoke(): SignUpModel {
         return SignUpModel().states[IBaseModel.DEFAULT]!!.setup {
             val rnd = System.currentTimeMillis().toString().takeLast(7)
             login = "l_$rnd@test.com"

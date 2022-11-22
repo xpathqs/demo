@@ -12,7 +12,7 @@ open class PageTest(
     startUpPage: Page = HomePage,
     redirectPage: Page? = null,
 
-    afterDriverCreated: (BaseUiTest.()->Unit)? = null,
+    afterDriverCreated: (BaseUiTest.() -> Unit)? = null,
 ) : BasePageTest(
     page = page,
     state = state,
